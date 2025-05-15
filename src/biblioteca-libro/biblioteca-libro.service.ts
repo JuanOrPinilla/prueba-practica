@@ -16,7 +16,7 @@ export class BibliotecaLibroService {
         private readonly libroRepository: Repository<LibroEntity>
     ) {}
 
-    async addLibroBiblioteca(bibliotecaId: string, libroId: string): Promise<BibliotecaEntity> {
+    async addBookToLibrary(bibliotecaId: string, libroId: string): Promise<BibliotecaEntity> {
         const libro: LibroEntity = await this.libroRepository.findOne({where: {id: libroId}});
         if (!libro)
           throw new BusinessLogicException("The libro with the given id was not found", BusinessError.NOT_FOUND);
@@ -29,7 +29,7 @@ export class BibliotecaLibroService {
         return await this.bibliotecaRepository.save(biblioteca);
     }
      
-    async findLibroByBibliotecaIdLibroId(bibliotecaId: string, libroId: string): Promise<LibroEntity> {
+    async findBookFromLibrary(bibliotecaId: string, libroId: string): Promise<LibroEntity> {
         const libro: LibroEntity = await this.libroRepository.findOne({where: {id: libroId}});
         if (!libro)
           throw new BusinessLogicException("The libro with the given id was not found", BusinessError.NOT_FOUND);
@@ -46,7 +46,7 @@ export class BibliotecaLibroService {
         return bibliotecaLibro;
     }
      
-    async findLibrosByBibliotecaId(bibliotecaId: string): Promise<LibroEntity[]> {
+    async  findBooksFromLibrary(bibliotecaId: string): Promise<LibroEntity[]> {
         const biblioteca: BibliotecaEntity = await this.bibliotecaRepository.findOne({where: {id: bibliotecaId}, relations: ["libros"]});
         if (!biblioteca)
           throw new BusinessLogicException("The biblioteca with the given id was not found", BusinessError.NOT_FOUND);
@@ -54,7 +54,7 @@ export class BibliotecaLibroService {
         return biblioteca.libros;
     }
      
-    async associateLibrosBiblioteca(bibliotecaId: string, libros: LibroEntity[]): Promise<BibliotecaEntity> {
+    async updateBooksFromLibrary(bibliotecaId: string, libros: LibroEntity[]): Promise<BibliotecaEntity> {
         const biblioteca: BibliotecaEntity = await this.bibliotecaRepository.findOne({where: {id: bibliotecaId}, relations: ["libros"]});
      
         if (!biblioteca)
@@ -70,7 +70,7 @@ export class BibliotecaLibroService {
         return await this.bibliotecaRepository.save(biblioteca);
     }
      
-    async deleteLibroBiblioteca(bibliotecaId: string, libroId: string){
+    async deleteBookFromLibrary(bibliotecaId: string, libroId: string){
         const libro: LibroEntity = await this.libroRepository.findOne({where: {id: libroId}});
         if (!libro)
           throw new BusinessLogicException("The libro with the given id was not found", BusinessError.NOT_FOUND);

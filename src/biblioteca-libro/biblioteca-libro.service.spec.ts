@@ -71,7 +71,7 @@ describe('BibliotecaLibroService', () => {
       horarioAtencion: 'Lunes a Viernes 8am - 6pm',
     });
 
-    const result: BibliotecaEntity = await service.addLibroBiblioteca(newBiblioteca.id, newLibro.id);
+    const result: BibliotecaEntity = await service.addBookToLibrary(newBiblioteca.id, newLibro.id);
 
     expect(result.libros.length).toBe(1);
     expect(result.libros[0]).not.toBeNull();
@@ -96,7 +96,7 @@ describe('BibliotecaLibroService', () => {
       horarioAtencion: 'Lunes a Viernes 8am - 6pm',
     });
 
-    await expect(() => service.addLibroBiblioteca(newBiblioteca.id, "0")).rejects.toHaveProperty(
+    await expect(() => service.addBookToLibrary(newBiblioteca.id, "0")).rejects.toHaveProperty(
       "message",
       "The libro with the given id was not found"
     );
@@ -110,7 +110,7 @@ describe('BibliotecaLibroService', () => {
       isbn: faker.string.uuid(),
     });
 
-    await expect(() => service.addLibroBiblioteca("0", newLibro.id)).rejects.toHaveProperty(
+    await expect(() => service.addBookToLibrary("0", newLibro.id)).rejects.toHaveProperty(
       "message",
       "The biblioteca with the given id was not found"
     );
@@ -118,7 +118,7 @@ describe('BibliotecaLibroService', () => {
 
   it('findLibroByBibliotecaIdLibroId should return libro by biblioteca', async () => {
     const libro: LibroEntity = librosList[0];
-    const storedLibro: LibroEntity = await service.findLibroByBibliotecaIdLibroId(biblioteca.id, libro.id);
+    const storedLibro: LibroEntity = await service.findBookFromLibrary(biblioteca.id, libro.id);
     
     expect(storedLibro).not.toBeNull();
     expect(storedLibro.titulo).toBe(libro.titulo);
@@ -136,7 +136,7 @@ describe('BibliotecaLibroService', () => {
   });
 
   it('findLibroByBibliotecaIdLibroId should throw exception for invalid libro', async () => {
-    await expect(() => service.findLibroByBibliotecaIdLibroId(biblioteca.id, "0")).rejects.toHaveProperty(
+    await expect(() => service.findBookFromLibrary(biblioteca.id, "0")).rejects.toHaveProperty(
       "message",
       "The libro with the given id was not found"
     );
@@ -144,7 +144,7 @@ describe('BibliotecaLibroService', () => {
 
   it('findLibroByBibliotecaIdLibroId should throw exception for invalid biblioteca', async () => {
     const libro: LibroEntity = librosList[0];
-    await expect(() => service.findLibroByBibliotecaIdLibroId("0", libro.id)).rejects.toHaveProperty(
+    await expect(() => service.findBookFromLibrary("0", libro.id)).rejects.toHaveProperty(
       "message",
       "The biblioteca with the given id was not found"
     );
@@ -158,19 +158,19 @@ describe('BibliotecaLibroService', () => {
       isbn: faker.string.uuid(),
     });
 
-    await expect(() => service.findLibroByBibliotecaIdLibroId(biblioteca.id, newLibro.id)).rejects.toHaveProperty(
+    await expect(() => service.findBookFromLibrary(biblioteca.id, newLibro.id)).rejects.toHaveProperty(
       "message",
       "The libro with the given id is not associated to the biblioteca"
     );
   });
 
   it('findLibrosByBibliotecaId should return libros by biblioteca', async () => {
-    const libros: LibroEntity[] = await service.findLibrosByBibliotecaId(biblioteca.id);
+    const libros: LibroEntity[] = await service.findBooksFromLibrary(biblioteca.id);
     expect(libros.length).toBe(5);
   });
 
   it('findLibrosByBibliotecaId should throw exception for invalid biblioteca', async () => {
-    await expect(() => service.findLibrosByBibliotecaId("0")).rejects.toHaveProperty(
+    await expect(() => service.findBooksFromLibrary("0")).rejects.toHaveProperty(
       "message",
       "The biblioteca with the given id was not found"
     );
@@ -184,7 +184,7 @@ describe('BibliotecaLibroService', () => {
       isbn: faker.string.uuid(),
     });
 
-    const updatedBiblioteca: BibliotecaEntity = await service.associateLibrosBiblioteca(biblioteca.id, [newLibro]);
+    const updatedBiblioteca: BibliotecaEntity = await service.updateBooksFromLibrary(biblioteca.id, [newLibro]);
     expect(updatedBiblioteca.libros.length).toBe(1);
 
     expect(updatedBiblioteca.libros[0].titulo).toBe(newLibro.titulo);
@@ -207,7 +207,7 @@ describe('BibliotecaLibroService', () => {
       isbn: faker.string.uuid(),
     });
 
-    await expect(() => service.associateLibrosBiblioteca("0", [newLibro])).rejects.toHaveProperty(
+    await expect(() => service.updateBooksFromLibrary("0", [newLibro])).rejects.toHaveProperty(
       "message",
       "The biblioteca with the given id was not found"
     );
@@ -217,7 +217,7 @@ describe('BibliotecaLibroService', () => {
     const newLibro: LibroEntity = librosList[0];
     newLibro.id = "0";
 
-    await expect(() => service.associateLibrosBiblioteca(biblioteca.id, [newLibro])).rejects.toHaveProperty(
+    await expect(() => service.updateBooksFromLibrary(biblioteca.id, [newLibro])).rejects.toHaveProperty(
       "message",
       "The libro with the given id was not found"
     );
@@ -226,7 +226,7 @@ describe('BibliotecaLibroService', () => {
   it('deleteLibroFromBiblioteca should remove a libro from a biblioteca', async () => {
     const libro: LibroEntity = librosList[0];
 
-    await service.deleteLibroBiblioteca(biblioteca.id, libro.id);
+    await service.deleteBookFromLibrary(biblioteca.id, libro.id);
 
     const storedBiblioteca: BibliotecaEntity = await bibliotecaRepository.findOne({
       where: { id: biblioteca.id },
@@ -238,7 +238,7 @@ describe('BibliotecaLibroService', () => {
   });
 
   it('deleteLibroFromBiblioteca should throw exception for invalid libro', async () => {
-    await expect(() => service.deleteLibroBiblioteca(biblioteca.id, "0")).rejects.toHaveProperty(
+    await expect(() => service. deleteBookFromLibrary(biblioteca.id, "0")).rejects.toHaveProperty(
       "message",
       "The libro with the given id was not found"
     );
@@ -246,7 +246,7 @@ describe('BibliotecaLibroService', () => {
 
   it('deleteLibroFromBiblioteca should throw exception for invalid biblioteca', async () => {
     const libro: LibroEntity = librosList[0];
-    await expect(() => service.deleteLibroBiblioteca("0", libro.id)).rejects.toHaveProperty(
+    await expect(() => service.deleteBookFromLibrary("0", libro.id)).rejects.toHaveProperty(
       "message",
       "The biblioteca with the given id was not found"
     );
@@ -260,7 +260,7 @@ describe('BibliotecaLibroService', () => {
       isbn: faker.string.uuid(),
     });
 
-    await expect(() => service.deleteLibroBiblioteca(biblioteca.id, newLibro.id)).rejects.toHaveProperty(
+    await expect(() => service.deleteBookFromLibrary(biblioteca.id, newLibro.id)).rejects.toHaveProperty(
       "message",
       "The libro with the given id is not associated to the biblioteca"
     );
