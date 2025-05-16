@@ -1,0 +1,656 @@
+{
+	"info": {
+		"_postman_id": "3f84b7a1-8436-434b-97c5-9b13fcf2ee85",
+		"name": "Bibliotecas",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "25532687"
+	},
+	"item": [
+		{
+			"name": "Add a biblioteca",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"var data = pm.response.json()\r",
+							"pm.globals.set(\"library_id\", data.id);\r",
+							"\r",
+							"pm.test(\"Status code is 201\", function () {\r",
+							"   pm.response.to.have.status(201);\r",
+							"});"
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n  \"nombre\": \"Biblioteca Central\",\r\n  \"direccion\": \"Calle 123 #45-67\",\r\n  \"ciudad\": \"Bogotá\",\r\n  \"horarioAtencion\": \"Lunes a Viernes de 8am a 6pm\"\r\n}\r\n",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{baseUrl}}/libraries",
+					"host": [
+						"{{baseUrl}}"
+					],
+					"path": [
+						"libraries"
+					]
+				}
+			},
+			"response": [
+				{
+					"name": "Add a biblioteca",
+					"originalRequest": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n  \"nombre\": \"Biblioteca Central\",\r\n  \"direccion\": \"Calle 123 #45-67\",\r\n  \"ciudad\": \"Bogotá\",\r\n  \"horarioAtencion\": \"Lunes a Viernes de 8am a 6pm\"\r\n}\r\n",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseUrl}}/libraries",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"libraries"
+							]
+						}
+					},
+					"status": "Created",
+					"code": 201,
+					"_postman_previewlanguage": "json",
+					"header": [
+						{
+							"key": "Content-Type",
+							"value": "application/json",
+							"name": "Content-Type",
+							"description": "",
+							"type": "text"
+						}
+					],
+					"cookie": [],
+					"body": "{\n    \"nombre\": \"Biblioteca Central\",\n    \"direccion\": \"Calle 123 #45-67\",\n    \"ciudad\": \"Bogotá\",\n    \"horarioAtencion\": \"Lunes a Viernes de 8am a 6pm\",\n    \"id\": \"8ad1d35c-fbe3-46a1-abf5-350439c98d21\"\n}"
+				}
+			]
+		},
+		{
+			"name": "Add a invalid biblioteca",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Status code is 400\", function () {\r",
+							"    pm.response.to.have.status(400);\r",
+							"});\r",
+							"\r",
+							"pm.test(\"Debe contener un mensaje de error\", function () {\r",
+							"    var jsonData = pm.response.json();\r",
+							"    pm.expect(jsonData.message).to.be.ok;\r",
+							"});"
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n  \"nombre\": \"Biblioteca Central\",\r\n  \"direccion\": \"Calle 123 #45-67\",\r\n  \"ciudad\": \"\",\r\n  \"horarioAtencion\": \"Lunes a Viernes de 8am a 6pm\"\r\n}\r\n",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{baseUrl}}/libraries",
+					"host": [
+						"{{baseUrl}}"
+					],
+					"path": [
+						"libraries"
+					]
+				}
+			},
+			"response": [
+				{
+					"name": "Add a biblioteca",
+					"originalRequest": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n  \"nombre\": \"Biblioteca Central\",\r\n  \"direccion\": \"Calle 123 #45-67\",\r\n  \"ciudad\": \"\",\r\n  \"horarioAtencion\": \"Lunes a Viernes de 8am a 6pm\"\r\n}\r\n",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseUrl}}/libraries",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"libraries"
+							]
+						}
+					},
+					"status": "Created",
+					"code": 201,
+					"_postman_previewlanguage": "json",
+					"header": [
+						{
+							"key": "Content-Type",
+							"value": "application/json",
+							"description": "",
+							"type": "text"
+						}
+					],
+					"cookie": [],
+					"body": "{\n    \"message\": [\n        \"ciudad should not be empty\"\n    ],\n    \"error\": \"Bad Request\",\n    \"statusCode\": 400\n}"
+				}
+			]
+		},
+		{
+			"name": "Get all bibliotecas",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test('Number of libraries > ' + 0, function () {\r",
+							"   var data = pm.response.json()\r",
+							"   pm.expect(data.length).to.greaterThan(0)\r",
+							"});\r",
+							"\r",
+							"pm.test(\"Status code is 200\", function () {\r",
+							"   pm.response.to.have.status(200);\r",
+							"});"
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{baseUrl}}/libraries",
+					"host": [
+						"{{baseUrl}}"
+					],
+					"path": [
+						"libraries"
+					]
+				}
+			},
+			"response": [
+				{
+					"name": "Get all bibliotecas",
+					"originalRequest": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/libraries",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"libraries"
+							]
+						}
+					},
+					"status": "OK",
+					"code": 200,
+					"_postman_previewlanguage": "json",
+					"header": [
+						{
+							"key": "Content-Type",
+							"value": "application/json",
+							"name": "Content-Type",
+							"description": "",
+							"type": "text"
+						}
+					],
+					"cookie": [],
+					"body": "[\n    {\n        \"id\": \"8ad1d35c-fbe3-46a1-abf5-350439c98d21\",\n        \"nombre\": \"Biblioteca Central\",\n        \"direccion\": \"Calle 123 #45-67\",\n        \"ciudad\": \"Bogotá\",\n        \"horarioAtencion\": \"Lunes a Viernes de 8am a 6pm\",\n        \"libros\": []\n    }\n]"
+				}
+			]
+		},
+		{
+			"name": "Get a biblioteca",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Status code is 200\", function () {\r",
+							"   pm.response.to.have.status(200);\r",
+							"});"
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{baseUrl}}/libraries/{{library_id}}",
+					"host": [
+						"{{baseUrl}}"
+					],
+					"path": [
+						"libraries",
+						"{{library_id}}"
+					]
+				}
+			},
+			"response": [
+				{
+					"name": "Get a biblioteca",
+					"originalRequest": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/libraries/{{library_id}}",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"libraries",
+								"{{library_id}}"
+							]
+						}
+					},
+					"status": "OK",
+					"code": 200,
+					"_postman_previewlanguage": "json",
+					"header": [
+						{
+							"key": "Content-Type",
+							"value": "application/json",
+							"name": "Content-Type",
+							"description": "",
+							"type": "text"
+						}
+					],
+					"cookie": [],
+					"body": "{\r\n    \"id\": \"40fc5abf-3cba-40cf-a151-e24f01db20bc\",\r\n    \"nombre\": \"Biblioteca Central\",\r\n    \"direccion\": \"Calle 123 #45-67\",\r\n    \"ciudad\": \"Bogotá\",\r\n    \"horarioAtencion\": \"Lunes a Viernes de 8am a 6pm\",\r\n    \"libros\": []\r\n}"
+				}
+			]
+		},
+		{
+			"name": "Get an invalid biblioteca",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Status code is 404\", function () {\r",
+							"   pm.response.to.have.status(404);\r",
+							"});\r",
+							"\r",
+							"pm.test(\"Get expected error message\", function () {\r",
+							"   var data = pm.response.json();\r",
+							"   pm.expect(data.message).to.eql(\"The biblioteca with the given id was not found\");\r",
+							"});"
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{baseUrl}}/libraries/00000000-0000-0000-0000-000000000000",
+					"host": [
+						"{{baseUrl}}"
+					],
+					"path": [
+						"libraries",
+						"00000000-0000-0000-0000-000000000000"
+					]
+				}
+			},
+			"response": [
+				{
+					"name": "Get an invalid biblioteca",
+					"originalRequest": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/libraries/00000000-0000-0000-0000-000000000000",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"libraries",
+								"00000000-0000-0000-0000-000000000000"
+							]
+						}
+					},
+					"_postman_previewlanguage": null,
+					"header": null,
+					"cookie": [],
+					"body": null
+				}
+			]
+		},
+		{
+			"name": "Update a biblioteca",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Status code is 200\", function () {\r",
+							"   pm.response.to.have.status(200);\r",
+							"});"
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
+			"request": {
+				"method": "PUT",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n  \"nombre\": \"Biblioteca Distrital\",\r\n  \"direccion\": \"Calle 1 #45-67\",\r\n  \"ciudad\": \"Bogotá\",\r\n  \"horarioAtencion\": \"Lunes a Viernes de 6am a 5pm\"\r\n}\r\n",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{baseUrl}}/libraries/{{library_id}}",
+					"host": [
+						"{{baseUrl}}"
+					],
+					"path": [
+						"libraries",
+						"{{library_id}}"
+					]
+				}
+			},
+			"response": [
+				{
+					"name": "Update a biblioteca",
+					"originalRequest": {
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n  \"nombre\": \"Biblioteca Distrital\",\r\n  \"direccion\": \"Calle 1 #45-67\",\r\n  \"ciudad\": \"Bogotá\",\r\n  \"horarioAtencion\": \"Lunes a Viernes de 6am a 5pm\"\r\n}\r\n",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseUrl}}/libraries/{{library_id}}",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"libraries",
+								"{{library_id}}"
+							]
+						}
+					},
+					"_postman_previewlanguage": "json",
+					"header": [
+						{
+							"key": "Content-Type",
+							"value": "application/json",
+							"name": "Content-Type",
+							"description": "",
+							"type": "text"
+						}
+					],
+					"cookie": [],
+					"body": "{\n    \"nombre\": \"Biblioteca Distrital\",\n    \"direccion\": \"Calle 1 #45-67\",\n    \"ciudad\": \"Bogotá\",\n    \"horarioAtencion\": \"Lunes a Viernes de 6am a 5pm\",\n    \"id\": \"40fc5abf-3cba-40cf-a151-e24f01db20bc\"\n}"
+				}
+			]
+		},
+		{
+			"name": "Update a invalid biblioteca",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Status code is 404\", function () {\r",
+							"   pm.response.to.have.status(404);\r",
+							"});\r",
+							"\r",
+							"pm.test(\"Get expected error message\", function () {\r",
+							"   var data = pm.response.json();\r",
+							"   pm.expect(data.message).to.eql(\"The biblioteca with the given id was not found\");\r",
+							"});"
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
+			"request": {
+				"method": "PUT",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n  \"nombre\": \"Biblioteca Distrital\",\r\n  \"direccion\": \"Calle 1 #45-67\",\r\n  \"ciudad\": \"Bogotá\",\r\n  \"horarioAtencion\": \"Lunes a Viernes de 6am a 5pm\"\r\n}\r\n",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{baseUrl}}/libraries/00000000-0000-0000-0000-000000000000",
+					"host": [
+						"{{baseUrl}}"
+					],
+					"path": [
+						"libraries",
+						"00000000-0000-0000-0000-000000000000"
+					]
+				}
+			},
+			"response": [
+				{
+					"name": "Update a biblioteca",
+					"originalRequest": {
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n  \"nombre\": \"Biblioteca Distrital\",\r\n  \"direccion\": \"Calle 1 #45-67\",\r\n  \"ciudad\": \"Bogotá\",\r\n  \"horarioAtencion\": \"Lunes a Viernes de 6am a 5pm\"\r\n}\r\n",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseUrl}}/libraries/{{library_id}}",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"libraries",
+								"{{library_id}}"
+							]
+						}
+					},
+					"_postman_previewlanguage": "json",
+					"header": [
+						{
+							"key": "Content-Type",
+							"value": "application/json",
+							"description": "",
+							"type": "text"
+						}
+					],
+					"cookie": [],
+					"body": "{\n    \"statusCode\": 404,\n    \"message\": \"The biblioteca with the given id was not found\"\n}"
+				}
+			]
+		},
+		{
+			"name": "Delete a biblioteca",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Status code is 204\", function () {\r",
+							"   pm.response.to.have.status(204);\r",
+							"});"
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
+			"request": {
+				"method": "DELETE",
+				"header": [],
+				"url": {
+					"raw": "{{baseUrl}}/libraries/{{library_id}}",
+					"host": [
+						"{{baseUrl}}"
+					],
+					"path": [
+						"libraries",
+						"{{library_id}}"
+					]
+				}
+			},
+			"response": [
+				{
+					"name": "Delete a biblioteca",
+					"originalRequest": {
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/libraries/{{library_id}}",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"libraries",
+								"{{library_id}}"
+							]
+						}
+					},
+					"status": "No Content",
+					"code": 204,
+					"_postman_previewlanguage": null,
+					"header": null,
+					"cookie": [],
+					"body": null
+				}
+			]
+		},
+		{
+			"name": "Delete a invalid biblioteca",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Status code is 404\", function () {\r",
+							"   pm.response.to.have.status(404);\r",
+							"});\r",
+							"\r",
+							"pm.test(\"Get expected error message\", function () {\r",
+							"   var data = pm.response.json();\r",
+							"   pm.expect(data.message).to.eql(\"The biblioteca with the given id was not found\");\r",
+							"});"
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
+			"request": {
+				"method": "DELETE",
+				"header": [],
+				"url": {
+					"raw": "{{baseUrl}}/libraries/00000000-0000-0000-0000-000000000000",
+					"host": [
+						"{{baseUrl}}"
+					],
+					"path": [
+						"libraries",
+						"00000000-0000-0000-0000-000000000000"
+					]
+				}
+			},
+			"response": [
+				{
+					"name": "Delete a invalid biblioteca",
+					"originalRequest": {
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/libraries/00000000-0000-0000-0000-000000000000",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"libraries",
+								"00000000-0000-0000-0000-000000000000"
+							]
+						}
+					},
+					"status": "Not Found",
+					"code": 404,
+					"_postman_previewlanguage": "json",
+					"header": [
+						{
+							"key": "Content-Type",
+							"value": "application/json",
+							"name": "Content-Type",
+							"description": "",
+							"type": "text"
+						}
+					],
+					"cookie": [],
+					"body": "{\n    \"statusCode\": 404,\n    \"message\": \"The biblioteca with the given id was not found\"\n}"
+				}
+			]
+		}
+	]
+}
