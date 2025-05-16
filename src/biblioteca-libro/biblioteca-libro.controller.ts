@@ -11,28 +11,28 @@ import { plainToInstance } from 'class-transformer';
 export class BibliotecaLibroController {
     constructor(private readonly bibliotecaLibroService: BibliotecaLibroService){}
 
-    @Post(':bibliotecaId/libros/:libroId')
+    @Post(':bibliotecaId/books/:libroId')
     async addLibroBiblioteca(@Param('bibliotecaId') bibliotecaId: string, @Param('libroId') libroId: string){
          return await this.bibliotecaLibroService.addBookToLibrary(bibliotecaId, libroId);
     }
 
-    @Get(':bibliotecaId/libros/:libroId')
+    @Get(':bibliotecaId/books/:libroId')
     async findLibroByBibliotecaIdLibroId(@Param('bibliotecaId') bibliotecaId: string, @Param('libroId') libroId: string){
          return await this.bibliotecaLibroService.findBookFromLibrary(bibliotecaId, libroId);
     }
 
-    @Get(':bibliotecaId/libros')
+    @Get(':bibliotecaId/books')
     async findLibrosByBibliotecaId(@Param('bibliotecaId') bibliotecaId: string){
          return await this.bibliotecaLibroService.findBooksFromLibrary(bibliotecaId);
     }
 
-    @Put(':bibliotecaId/libros')
+    @Put(':bibliotecaId/books')
     async associateLibrosBiblioteca(@Body() librosDto: LibroDto[], @Param('bibliotecaId') bibliotecaId: string){
          const libros = plainToInstance(LibroEntity, librosDto)
          return await this.bibliotecaLibroService.updateBooksFromLibrary(bibliotecaId, libros);
     }
 
-    @Delete(':bibliotecaId/libros/:libroId')
+    @Delete(':bibliotecaId/books/:libroId')
     @HttpCode(204)
     async deleteLibroBiblioteca(@Param('bibliotecaId') bibliotecaId: string, @Param('libroId') libroId: string){
          return await this.bibliotecaLibroService.deleteBookFromLibrary(bibliotecaId, libroId);
